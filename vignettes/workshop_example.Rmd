@@ -1,9 +1,9 @@
 ---
-title: "An Example Workshop"
-author: Sean Davis^[seandavi@gmail.com]
+title: "Tidy workshop for Bioc2024 conference"
+author: Jacques Serizay^[jacquesserizay@gmail.com]
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{An Example Workshop}
+  %\VignetteIndexEntry{Tidy workshop for Bioc2024 conference}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,13 +16,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Workshop Title
+# Tidy workshop for Bioc2024 conference
 
 Authors:
-    Author Name^[Institution],
-    Another Author^[Another Institution].
+    Jacques Serizay^[Institution],
     <br/>
-Last modified: 14 May, 2018.
+Last modified: 2024-07-06.
 
 ## Overview
 
@@ -37,7 +36,7 @@ notes that can be read and understood outside of the workshop.
 
 ### Pre-requisites
 
-List any workshop prerequisites, for example:
+List any workshop prwerequisites, for example:
 
 * Basic knowledge of R syntax
 * Familiarity with the GenomicRanges class

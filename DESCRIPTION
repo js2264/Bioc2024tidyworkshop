@@ -1,16 +1,14 @@
-Package: BuildABiocWorkshop
-Title: Bioconductor or R Workshop Template and Github Actions
+Package: Bioc2024tidyWorkshop
+Title: Tidy workshop for Bioc2024 conference
 Version: 2.0.1
 Authors@R: 
-    person(given = "Sean",
-           family = "Davis",
+    person(given = "Jacques",
+           family = "Serizay",
            role = c("aut", "cre"),
-           email = "seandavi@gmail.com",
-           comment = c(ORCID = "0000-0002-8991-6458"))
-Description: This package serves as a template for using github actions to 
-    prepare a Bioconductor Workshop package for use. In particular,
-    a pkgdown website and docker image are generated based on workflow 
-    settings. 
+           email = "jacquesserizay@gmail.com")
+Description: Workshop demonstrating how to use `tidyomics` methodology to 
+    investigate genomic data using tidy data principles. This workshop is 
+    planned to be ran during the Bioc2024 conference. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -18,11 +16,13 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Depends: 
     Biobase
-Suggests: 
+Imports:
+    tidyCoverage, 
+    plyinteractions,
     knitr,
     rmarkdown,
     pkgdown
-URL: https://seandavi.github.io/BuildABiocWorkshop/
-BugReports: https://github.com/seandavi/BuildABiocWorkshop/issues/new/choose
+URL: https://js2264.github.io/Bioc2024tidyworkshop/
+BugReports: https://github.com/js2264/Bioc2024tidyworkshop/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: ghcr.io/seandavi/buildabiocworkshop:latest
+DockerImage: ghcr.io/js2264/bioc2024tidyworkshop:latest
