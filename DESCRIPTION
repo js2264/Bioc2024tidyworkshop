@@ -1,6 +1,6 @@
 Package: Bioc2024tidyWorkshop
-Title: Tidy workshop for Bioc2024 conference
-Version: 2.0.1
+Title: Applying tidy principles to investigating chromatin composition and architecture
+Version: 0.8.0
 Authors@R: 
     person(given = "Jacques",
            family = "Serizay",
@@ -17,6 +17,8 @@ RoxygenNote: 7.1.0
 Depends: 
     Biobase
 Imports:
+    tidyverse, 
+    plyranges, 
     tidyCoverage, 
     plyinteractions,
     knitr,
