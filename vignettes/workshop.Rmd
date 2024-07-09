@@ -29,8 +29,6 @@ library(GenomicRanges)
 
 library(BiocIO)
 
-devtools::load_all('/home/rsg/repos/Bioc2024_tidyworkshop')
-
 bedf <- system.file('extdata', 'S288C-borders.bed', package = 'Bioc2024tidyWorkshop')
 
 import(bedf)
@@ -237,9 +235,7 @@ pairs <- read_tsv(pairsf, col_names = FALSE, comment = "#") |>
     rlang::set_names(c(
         "ID", "seqnames1", "start1", "seqnames2", "start2", "strand1", "strand2"
     )) |> 
-    as_ginteractions(
-        pairs_df, end1 = start1, end2 = start2, keep.extra.columns = TRUE
-    ) 
+    as_ginteractions(end1 = start1, end2 = start2, keep.extra.columns = TRUE)
 ```
 
 ### Counting interactions by strands

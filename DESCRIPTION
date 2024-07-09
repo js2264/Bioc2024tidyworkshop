@@ -24,6 +24,8 @@ Imports:
     knitr,
     rmarkdown,
     pkgdown
+Remotes:
+    js2264/plyinteractions
 URL: https://js2264.github.io/Bioc2024tidyworkshop/
 BugReports: https://github.com/js2264/Bioc2024tidyworkshop/issues/new/choose
 VignetteBuilder: knitr
