@@ -26,6 +26,7 @@ Imports:
     AnnotationHub, 
     TxDb.Hsapiens.UCSC.hg19.knownGene, 
     GenomicFeatures, 
+    tidySummarizedExperiment, 
     knitr,
     rmarkdown,
     pkgdown
