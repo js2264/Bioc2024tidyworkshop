@@ -27,9 +27,9 @@ into `GRanges` object in R.
 ```{r}
 library(GenomicRanges)
 
-library(BiocIO)
+library(rtracklayer)
 
-bedf <- system.file('extdata', 'S288C-borders.bed', package = 'Bioc2024tidyWorkshop')
+bedf <- system.file('extdata', 'S288C-borders.bed', package = 'Bioc2024tidyWorkshop', mustWork = TRUE)
 
 import(bedf)
 ```
@@ -134,7 +134,7 @@ genomic interactions, e.g. a `bedpe` file or a `pairs` file, using the
 `as_ginteractions()` coercing function from the `plyinteractions` package.
 
 ```{r}
-bedpef <- system.file('extdata', 'S288C-loops.bedpe', package = 'Bioc2024tidyWorkshop')
+bedpef <- system.file('extdata', 'S288C-loops.bedpe', package = 'Bioc2024tidyWorkshop', mustWork = TRUE)
 
 tib <- read_tsv(bedpef, col_names = FALSE) 
 
@@ -193,7 +193,7 @@ gi |>
 to work with 
 
 ```{r}
-centros <- system.file('extdata', 'S288C-centromeres.txt', package = 'Bioc2024tidyWorkshop') |> 
+centros <- system.file('extdata', 'S288C-centromeres.txt', package = 'Bioc2024tidyWorkshop', mustWork = TRUE) |> 
     read_tsv() |> 
     as_granges(seqnames = seqID) |> 
     anchor_center() |> 
@@ -229,7 +229,7 @@ Let's first import pairs as a `tibble`, then coerce them into `GInterctions`.
 The `mESCs.pairs.gz` example dataset is provided by the workshop package. 
 
 ```{r}
-pairsf <- system.file('extdata', 'mESCs.pairs.gz', package = 'Bioc2024tidyWorkshop')
+pairsf <- system.file('extdata', 'mESCs.pairs.gz', package = 'Bioc2024tidyWorkshop', mustWork = TRUE)
 
 pairs <- read_tsv(pairsf, col_names = FALSE, comment = "#") |> 
     rlang::set_names(c(
