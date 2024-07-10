@@ -232,7 +232,7 @@ The `mESCs.pairs.gz` example dataset is provided by the workshop package.
 pairsf <- system.file('extdata', 'mESCs.pairs.gz', package = 'Bioc2024tidyWorkshop', mustWork = TRUE)
 
 pairs <- read_tsv(pairsf, col_names = FALSE, comment = "#") |> 
-    rlang::set_names(c(
+    set_names(c(
         "ID", "seqnames1", "start1", "seqnames2", "start2", "strand1", "strand2"
     )) |> 
     as_ginteractions(end1 = start1, end2 = start2, keep.extra.columns = TRUE)
@@ -294,11 +294,88 @@ ggplot(df, aes(x = binned_s, y = Ps)) +
 
 *Recommended time: 10 min*
 
-### `CoverageExperiment` and `AggregateCoverage` class
+### `CoverageExperiment` and `AggregatedCoverage` class
 
-### Plotting coverage tracks (basic)
+Both classes are built on top of `SummarizedExperiment` class of objects. 
 
-### Plotting aggregates (basic: single track, single set of features)
+```{r}
+library(tidyCoverage)
+
+data(ce)
+
+data(ac)
+
+ce
+
+ac
+```
+
+### Creating a `CoverageExperiment` object from tracks and features
+
+```{r}
+tracks <- BigWigFileList(c(
+    mnase = system.file("extdata", "MNase.bw", package = "tidyCoverage"), 
+    cohesin = system.file("extdata", "Scc1.bw", package = "tidyCoverage")  
+))
+features <- GRangesList(
+    TSSs = system.file("extdata", "TSSs.bed", package = "tidyCoverage") |> import(), 
+    TTSs = system.file("extdata", "TTSs.bed", package = "Bioc2024tidyWorkshop") |> import()
+)
+
+ce <- CoverageExperiment(
+    tracks = tracks, 
+    features = features,
+    width = 3000, 
+    ignore.strand = FALSE
+)
+
+ce
+
+assay(ce, 'coverage')
+
+dim(assay(ce, 'coverage')[['TSSs', 'mnase']])
+```
+
+### Tidy coverage? That's right!
+
+```{r}
+library(tidySummarizedExperiment)
+
+ce
+
+ce |> filter(features == 'TSSs')
+
+ce |> slice(2)
+
+ce |> 
+    filter(track == 'mnase') |> 
+    select(features, n)
+```
+
+### `expand()` or `aggregate()`
+
+```{r}
+tib <- expand(ce)
+
+tib
+
+ac <- aggregate(ce)
+
+ac
+```
+
+### Example: visualizing aggregated coverage
+
+```{r}
+ac |>
+    ggplot(aes(x = coord, y = mean)) + 
+    geom_ribbon(aes(ymin = ci_low, ymax = ci_high, fill = track), alpha = 0.2) + 
+    geom_line(aes(col = track)) + 
+    facet_grid(track ~ features, scales = "free") + 
+    labs(x = 'Distance from genomic features', y = 'Signal coverage') + 
+    theme_bw() + 
+    theme(legend.position = 'top')
+```
 
 ## Real-world use case: studying epigenomic landscape of reulatory elements
 
@@ -306,7 +383,41 @@ ggplot(df, aes(x = binned_s, y = Ps)) +
 
 ### Import sets of hg19 gene annotations from ENCODE
 
+```{r}
+library(AnnotationHub)
+ah <- AnnotationHub()
+ids <- c('AH32207', 'AH35187', 'AH32228', 'AH35193')
+names(ids) <- mcols(ah[ids])$title |> 
+    gsub(".*IMR90.|.*E017.", "", x = _) |> 
+    gsub("\\..*", "", x = _)
+bws <- map(ids, ~ ah[[.x]]) |> map(resource) |> BigWigFileList()
+names(bws) <- names(ids)
+```
+
 ### Fetch coverage data from ENCODE
 
-### Generating ATAC/MNase/ChIP/RNA coverage aggregates over promoters/enhancers
+```{r}
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
+TSSs <- GenomicFeatures::genes(txdb) |> 
+    filter(strand == '+') |> 
+    anchor_5p() |> 
+    mutate(width = 1) |> 
+    shift_downstream(4000)
+```
 
+### Generating coverage aggregates over TSSs
+
+```{r}
+ce <- CoverageExperiment(bws, TSSs, width = 16000, window = 10, scale = TRUE, center = TRUE)
+ac <- aggregate(ce)
+ac |> 
+    as_tibble() |> 
+    mutate(coord = coord + 4000) |> 
+    ggplot(aes(x = coord, y = mean)) + 
+    geom_ribbon(aes(ymin = ci_low, ymax = ci_high, fill = track), alpha = 0.2) + 
+    geom_line(aes(col = track)) + 
+    facet_wrap(~track) + 
+    labs(x = 'Distance from TSSs', y = 'Signal (z-score)') + 
+    theme_bw() + 
+    theme(legend.position = 'top')
+```

@@ -16,10 +16,16 @@ Roxygen: list(markdown = TRUE)
 Depends: 
     Biobase
 Imports:
+    GenomicRanges, 
+    InteractionSet, 
+    rtracklayer, 
     tidyverse, 
     plyranges, 
     tidyCoverage, 
     plyinteractions,
+    AnnotationHub, 
+    TxDb.Hsapiens.UCSC.hg19.knownGene, 
+    GenomicFeatures, 
     knitr,
     rmarkdown,
     pkgdown
