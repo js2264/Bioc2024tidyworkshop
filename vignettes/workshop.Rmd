@@ -385,11 +385,10 @@ ac |>
 
 ```{r}
 library(AnnotationHub)
-library(BiocParallel)
 ah <- AnnotationHub()
 ids <- c('AH32207', 'AH35187')
 names(ids) <- c('DNAse', 'H3K4me3')
-bws <- bplapply(ids, function(.x) ah[[.x]] |> resource()) |> BigWigFileList()
+bws <- lapply(ids, function(.x) ah[[.x]] |> resource()) |> BigWigFileList()
 names(bws) <- names(ids)
 ```
 
