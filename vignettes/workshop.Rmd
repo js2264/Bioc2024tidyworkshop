@@ -381,43 +381,62 @@ ac |>
 
 *Recommended time: 20 min*
 
-### Import sets of hg19 gene annotations from ENCODE
-
-```{r}
-library(AnnotationHub)
-ah <- AnnotationHub()
-ids <- c('AH32207', 'AH35187', 'AH32228', 'AH35193')
-names(ids) <- mcols(ah[ids])$title |> 
-    gsub(".*IMR90.|.*E017.", "", x = _) |> 
-    gsub("\\..*", "", x = _)
-bws <- map(ids, ~ ah[[.x]]) |> map(resource) |> BigWigFileList()
-names(bws) <- names(ids)
-```
-
 ### Fetch coverage data from ENCODE
 
 ```{r}
-txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
-TSSs <- GenomicFeatures::genes(txdb) |> 
-    filter(strand == '+') |> 
-    anchor_5p() |> 
-    mutate(width = 1) |> 
-    shift_downstream(4000)
+library(AnnotationHub)
+library(BiocParallel)
+ah <- AnnotationHub()
+ids <- c('AH32207', 'AH35187')
+names(ids) <- c('DNAse', 'H3K4me3')
+bws <- bplapply(ids, function(.x) ah[[.x]] |> resource()) |> BigWigFileList()
+names(bws) <- names(ids)
 ```
 
-### Generating coverage aggregates over TSSs
+### Import DNase peaks from ENCODE
 
 ```{r}
-ce <- CoverageExperiment(bws, TSSs, width = 16000, window = 10, scale = TRUE, center = TRUE)
-ac <- aggregate(ce)
-ac |> 
-    as_tibble() |> 
-    mutate(coord = coord + 4000) |> 
+features <- list(DNase = ah[['AH30077']] |> filter(zScore > 100))
+```
+
+### Generating coverage aggregates over DNAse peak
+
+```{r}
+ce <- CoverageExperiment(bws, features, width = 2000, window = 10)
+```
+
+```{r}
+aggregate(ce) |> 
     ggplot(aes(x = coord, y = mean)) + 
     geom_ribbon(aes(ymin = ci_low, ymax = ci_high, fill = track), alpha = 0.2) + 
     geom_line(aes(col = track)) + 
     facet_wrap(~track) + 
-    labs(x = 'Distance from TSSs', y = 'Signal (z-score)') + 
+    labs(x = 'Distance from DNAse peak', y = 'Signal') + 
     theme_bw() + 
     theme(legend.position = 'top')
+```
+
+```{r}
+ranges.order <- ce |> 
+    expand() |> 
+    filter(track == 'DNase', coord.scaled >= -100, coord.scaled <= 100) |> 
+    summarize(sum = sum(coverage, na.rm = TRUE)) |> 
+    arrange(desc(sum)) |>
+    pull(ranges) |> 
+    rev()
+
+ce |> 
+    expand() |> 
+    mutate(ranges = factor(ranges, levels = ranges.order)) |> 
+    ggplot(aes(x = coord.scaled, y = ranges, fill = coverage)) + 
+    geom_tile() +
+    labs(x = 'Distance from DNAse peak', y = 'Signal') + 
+    facet_grid(~track) +
+    scale_x_continuous(expand = c(0, 0)) + 
+    scale_fill_distiller(palette = "OrRd", na.value = '#fff5ed', direction = 1, limits = c(5, 60), oob = scales::squish) +
+    theme_bw() + 
+    theme(
+        legend.position = 'top', 
+        axis.ticks.y = element_blank(), axis.text.y = element_blank()
+    )
 ```

@@ -27,6 +27,7 @@ Imports:
     TxDb.Hsapiens.UCSC.hg19.knownGene, 
     GenomicFeatures, 
     tidySummarizedExperiment, 
+    BiocParallel, 
     knitr,
     rmarkdown,
     pkgdown
