@@ -369,12 +369,9 @@ ac
 ```{r}
 ac |>
     ggplot(aes(x = coord, y = mean)) + 
-    geom_ribbon(aes(ymin = ci_low, ymax = ci_high, fill = track), alpha = 0.2) + 
-    geom_line(aes(col = track)) + 
+    geom_aggrcoverage(aes(col = track)) + 
     facet_grid(track ~ features, scales = "free") + 
-    labs(x = 'Distance from genomic features', y = 'Signal coverage') + 
-    theme_bw() + 
-    theme(legend.position = 'top')
+    labs(x = 'Distance from genomic features', y = 'Signal coverage')
 ```
 
 ## Real-world use case: studying epigenomic landscape of reulatory elements
@@ -392,6 +389,24 @@ bws <- lapply(ids, function(.x) ah[[.x]] |> resource()) |> BigWigFileList()
 names(bws) <- names(ids)
 ```
 
+### Plotting coverage data over several loci
+
+```{r}
+ce <- CoverageExperiment(
+    bws, 
+    list(
+        ccno = GRanges("chr5:55220001-55235000"),
+        mcidas = GRanges("chr5:55159001-55174000")
+    ), 
+    window = 50
+)
+expand(ce) |> 
+    mutate(coverage = scales::oob_squish(coverage, c(0, 10))) |> 
+    ggplot() +
+    geom_coverage(aes(fill = track), unit = 'Mb') + 
+    facet_grid(track~features, scales = 'free')
+```
+
 ### Import DNase peaks from ENCODE
 
 ```{r}
@@ -407,15 +422,12 @@ ce <- CoverageExperiment(bws, features, width = 2000, window = 10)
 ```{r}
 aggregate(ce) |> 
     ggplot(aes(x = coord, y = mean)) + 
-    geom_ribbon(aes(ymin = ci_low, ymax = ci_high, fill = track), alpha = 0.2) + 
-    geom_line(aes(col = track)) + 
+    geom_aggrcoverage(aes(col = track)) + 
     facet_wrap(~track) + 
-    labs(x = 'Distance from DNAse peak', y = 'Signal') + 
-    theme_bw() + 
-    theme(legend.position = 'top')
+    labs(x = 'Distance from DNAse peak', y = 'Signal') 
 ```
 
-```{r}
+```{r eval = FALSE, echo = FALSE}
 ranges.order <- ce |> 
     expand() |> 
     filter(track == 'DNase', coord.scaled >= -100, coord.scaled <= 100) |> 
@@ -438,4 +450,4 @@ ce |>
         legend.position = 'top', 
         axis.ticks.y = element_blank(), axis.text.y = element_blank()
     )
-```
+``` 

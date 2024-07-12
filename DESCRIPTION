@@ -32,7 +32,7 @@ Imports:
     rmarkdown,
     pkgdown
 Remotes:
-    js2264/plyinteractions
+    js2264/tidyCoverage
 URL: https://js2264.github.io/Bioc2024tidyworkshop/
 BugReports: https://github.com/js2264/Bioc2024tidyworkshop/issues/new/choose
 VignetteBuilder: knitr
