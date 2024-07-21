@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   workshop: workshop.html
-last_built: 2024-07-12T21:35Z
+last_built: 2024-07-21T05:06Z
 urls:
   reference: https://js2264.github.io/Bioc2024tidyworkshop/reference
   article: https://js2264.github.io/Bioc2024tidyworkshop/articles
