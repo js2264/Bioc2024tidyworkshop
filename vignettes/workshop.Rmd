@@ -318,22 +318,22 @@ tracks <- BigWigFileList(c(
     cohesin = system.file("extdata", "Scc1.bw", package = "tidyCoverage")  
 ))
 features <- GRangesList(
-    TSSs = system.file("extdata", "TSSs.bed", package = "tidyCoverage") |> import(), 
-    TTSs = system.file("extdata", "TTSs.bed", package = "Bioc2024tidyWorkshop") |> import()
+    TSSs = system.file("extdata", "TSSs.bed", package = "tidyCoverage") |> import() |> sample(2000), 
+    TTSs = system.file("extdata", "TTSs.bed", package = "Bioc2024tidyWorkshop") |> import() |> sample(2000)
 )
 
-ce <- CoverageExperiment(
+ce2 <- CoverageExperiment(
     tracks = tracks, 
     features = features,
-    width = 3000, 
+    width = 2000, 
     ignore.strand = FALSE
 )
 
-ce
+ce2
 
-assay(ce, 'coverage')
+assay(ce2, 'coverage')
 
-dim(assay(ce, 'coverage')[['TSSs', 'mnase']])
+dim(assay(ce2, 'coverage')[['TSSs', 'mnase']])
 ```
 
 ### Tidy coverage? That's right!
@@ -341,13 +341,13 @@ dim(assay(ce, 'coverage')[['TSSs', 'mnase']])
 ```{r}
 library(tidySummarizedExperiment)
 
-ce
+ce2
 
-ce |> filter(features == 'TSSs')
+ce2 |> filter(features == 'TSSs')
 
-ce |> slice(2)
+ce2 |> slice(2)
 
-ce |> 
+ce2 |> 
     filter(track == 'mnase') |> 
     select(features, n)
 ```
@@ -355,19 +355,19 @@ ce |>
 ### `expand()` or `aggregate()`
 
 ```{r}
-tib <- expand(ce)
+tib <- expand(ce2)
 
 tib
 
-ac <- aggregate(ce)
+ac2 <- aggregate(ce2)
 
-ac
+ac2
 ```
 
 ### Example: visualizing aggregated coverage
 
 ```{r}
-ac |>
+ac2 |>
     ggplot(aes(x = coord, y = mean)) + 
     geom_aggrcoverage(aes(col = track)) + 
     facet_grid(track ~ features, scales = "free") + 
@@ -392,7 +392,7 @@ names(bws) <- names(ids)
 ### Plotting coverage data over several loci
 
 ```{r}
-ce <- CoverageExperiment(
+ce3 <- CoverageExperiment(
     bws, 
     list(
         ccno = GRanges("chr5:55220001-55235000"),
@@ -400,7 +400,7 @@ ce <- CoverageExperiment(
     ), 
     window = 50
 )
-expand(ce) |> 
+expand(ce3) |> 
     mutate(coverage = scales::oob_squish(coverage, c(0, 10))) |> 
     ggplot() +
     geom_coverage(aes(fill = track), unit = 'Mb') + 
@@ -410,17 +410,17 @@ expand(ce) |>
 ### Import DNase peaks from ENCODE
 
 ```{r}
-features <- list(DNase = ah[['AH30077']] |> filter(zScore > 100))
+features <- list(DNase = ah[['AH30077']] |> filter(zScore > 100) |> sample(1000))
 ```
 
 ### Generating coverage aggregates over DNAse peak
 
 ```{r}
-ce <- CoverageExperiment(bws, features, width = 2000, window = 10)
+ce4 <- CoverageExperiment(bws, features, width = 2000, window = 10)
 ```
 
 ```{r}
-aggregate(ce) |> 
+aggregate(ce4) |> 
     ggplot(aes(x = coord, y = mean)) + 
     geom_aggrcoverage(aes(col = track)) + 
     facet_wrap(~track) + 
@@ -428,15 +428,15 @@ aggregate(ce) |>
 ```
 
 ```{r eval = FALSE, echo = FALSE}
-ranges.order <- ce |> 
+ranges.order <- ce4 |> 
     expand() |> 
-    filter(track == 'DNase', coord.scaled >= -100, coord.scaled <= 100) |> 
+    filter(track == 'DNAse', coord.scaled >= -100, coord.scaled <= 100) |> 
     summarize(sum = sum(coverage, na.rm = TRUE)) |> 
     arrange(desc(sum)) |>
     pull(ranges) |> 
     rev()
 
-ce |> 
+ce4 |> 
     expand() |> 
     mutate(ranges = factor(ranges, levels = ranges.order)) |> 
     ggplot(aes(x = coord.scaled, y = ranges, fill = coverage)) + 
