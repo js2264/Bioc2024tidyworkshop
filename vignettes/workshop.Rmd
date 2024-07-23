@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 
 # Manipulating genomic ranges data
 
-*Recommended time: 10 min*
-
 ##  Importing `GRanges` from files
+
+*Recommended time: 10 min*
 
 The `BiocIO::import()` generic function lets one import `bed` files (or alike) 
 into `GRanges` object in R. 
@@ -55,6 +55,8 @@ gr
 Note how refering to column names is done using [tidy evaluation](https://dplyr.tidyverse.org/articles/programming.html#data-masking). 
 
 ##  Manipulating `GRanges` with tidy verbs
+
+*Recommended time: 10 min*
 
 With `plyranges`, [a number of tidy operations](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1597-8/tables/1) are readily available, e.g.: 
 
@@ -97,6 +99,8 @@ gr |>
     shift_upstream(250) |> 
     flank_upstream(100)
 ```
+
+-------------
 
 # Manipulating genomic interaction data
 
@@ -292,9 +296,9 @@ ggplot(df, aes(x = binned_s, y = Ps)) +
 
 ## Introduction to `tidyCoverage`
 
-*Recommended time: 10 min*
-
 ### `CoverageExperiment` and `AggregatedCoverage` class
+
+*Recommended time: 5 min*
 
 Both classes are built on top of `SummarizedExperiment` class of objects. 
 
@@ -311,6 +315,12 @@ ac
 ```
 
 ### Creating a `CoverageExperiment` object from tracks and features
+
+*Recommended time: 10 min*
+
+A `CoverageExperiment` object extracts coverage scores from `tracks` (typically 
+a named `BigWigFileList` or a list of already imported `RleList`s), over a list of 
+genomic ranges of interest (typically a named `GRangesList`). 
 
 ```{r}
 tracks <- BigWigFileList(c(
@@ -330,13 +340,34 @@ ce2 <- CoverageExperiment(
 )
 
 ce2
+```
+
+Remember, this class of object is nearly identical to a `SummarizedExperiment` 
+object. 
+
+The slight difference is that each cell of the `coverage` assay is a `list` with 
+a single element which is an array.  
+
+```{r}
+colData(ce2)
+
+rowData(ce2)
 
 assay(ce2, 'coverage')
+
+class(assay(ce2, 'coverage')['TSSs', 'mnase'])
+
+class(assay(ce2, 'coverage')[['TSSs', 'mnase']])
 
 dim(assay(ce2, 'coverage')[['TSSs', 'mnase']])
 ```
 
 ### Tidy coverage? That's right!
+
+*Recommended time: 5 min*
+
+Methods for `tidyverse` action verbs are available for `CoverageExperiment` objects, 
+through the `tidySummarizedExperiment` package. 
 
 ```{r}
 library(tidySummarizedExperiment)
@@ -347,36 +378,58 @@ ce2 |> filter(features == 'TSSs')
 
 ce2 |> slice(2)
 
-ce2 |> 
-    filter(track == 'mnase') |> 
-    select(features, n)
+ce2 |> select(features, n)
 ```
 
 ### `expand()` or `aggregate()`
+
+*Recommended time: 5 min*
+
+The `expand` method provided in the `tidyCoverage` package is used to 
+turn a `CoverageExperiment` object into a tidy `tibble`. 
 
 ```{r}
 tib <- expand(ce2)
 
 tib
+```
 
+The `aggregate` method provided in the `tidyCoverage` package is used to 
+turn a `CoverageExperiment` object into an `AggregatedCoverage`. This class of 
+object stores different statistical measurements of the coverage over 
+each element of the `GRangesList` provided in the `CoverageExperiment` object. 
+
+```{r}
 ac2 <- aggregate(ce2)
 
 ac2
 ```
 
-### Example: visualizing aggregated coverage
+### Visualizing aggregated coverage
+
+*Recommended time: 10 min*
+
+The development version of `tidyCoverage` now ships two `geom_*` with 
+appropriate default mapping aesthetics: 
+
+- `geom_coverage()` for `CoverageExperiment` objects.
+- `geom_aggrcoverage()` for `AggregatedCoverage` objects.
 
 ```{r}
-ac2 |>
-    ggplot(aes(x = coord, y = mean)) + 
-    geom_aggrcoverage(aes(col = track)) + 
+CoverageExperiment(tracks, GRanges("II:1-100000"), window = 100) |>
+    expand() |>
+    ggplot() +
+    geom_coverage() + 
+    facet_grid(track ~ features, scales = "free") + 
+    labs(x = 'chrV', y = 'Signal coverage')
+
+ggplot(ac2) + 
+    geom_aggrcoverage() + 
     facet_grid(track ~ features, scales = "free") + 
     labs(x = 'Distance from genomic features', y = 'Signal coverage')
 ```
 
 ## Real-world use case: studying epigenomic landscape of reulatory elements
-
-*Recommended time: 20 min*
 
 ### Fetch coverage data from ENCODE
 
@@ -413,7 +466,7 @@ expand(ce3) |>
 features <- list(DNase = ah[['AH30077']] |> filter(zScore > 100) |> sample(1000))
 ```
 
-### Generating coverage aggregates over DNAse peak
+### Generating coverage aggregates and heatmaps over DNAse peak
 
 ```{r}
 ce4 <- CoverageExperiment(bws, features, width = 2000, window = 10)

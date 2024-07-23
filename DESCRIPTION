@@ -14,17 +14,16 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 Depends: 
-    Biobase
+    Biobase, 
+    plyranges, 
+    plyinteractions,
+    tidyCoverage
 Imports:
     GenomicRanges, 
     InteractionSet, 
     rtracklayer, 
     tidyverse, 
-    plyranges, 
-    tidyCoverage, 
-    plyinteractions,
     AnnotationHub, 
-    TxDb.Hsapiens.UCSC.hg19.knownGene, 
     GenomicFeatures, 
     tidySummarizedExperiment, 
     scales, 

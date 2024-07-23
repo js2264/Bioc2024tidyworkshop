@@ -3,17 +3,17 @@
 *Authors:*
     Jacques Serizay^[[Institut Pasteur, Paris](https://research.pasteur.fr/en/team/spatial-regulation-of-genomes/)],
     <br/>
-*Last modified:* 2024-07-06.
+*Last modified:* 2024-07-23.
 
 ## Overview
 
-The integration of tidy tools into genomics analysis catalyzes a paradigm shift 
-in the way genomicists approach data manipulation and interpretation. 
 By adhering to the principles of tidy data organization and the elegant syntax 
 of `tidyverse` packages, researchers can navigate the complexities of genomic 
 datasets with unprecedented ease and efficiency. 
-In this workshop, we will discover two recent packages: 
 
+In this workshop, we will go over three recent packages: 
+
+- `plyranges`, developed to manipulate generic genomic ranges within the `tidyomics` framework;
 - `plyinteractions`, specifically developed to manipulate chromatin 
 conformation capture (3C, Hi-C micro-C, etc); 
 - `tidyCoverage`, to manipulate and extract coverage tracks within the `tidyomics` framework. 
@@ -22,6 +22,7 @@ conformation capture (3C, Hi-C micro-C, etc);
 `SummarizedExperiment`-derived S4 classes to store genomics data and expand 
 tidy methods, following the principles defined in `plyranges` and
 `tidySummarizedExperiment`.  
+
 They synergize the existing functionalities of `tidyverse` and 
 Bioconductor, to seamlessly intertwine data manipulation, aggregation, 
 visualization, and modeling within a unified framework.  
@@ -53,10 +54,9 @@ The following resources are relevant to this workshop:
 
 | Activity                                   | Time |
 |--------------------------------------------|------|
-| Manipulating genomic ranges data           | 10m  |
+| Manipulating genomic ranges data           | 20m  |
 | Manipulating genomic interaction data      | 35m  |
-| Manipulating coverage data                 | 25m  |
-| Putting everything together!               | 20m  |
+| Manipulating coverage data                 | 35m  |
 
 ### Workshop goals and objectives
 
