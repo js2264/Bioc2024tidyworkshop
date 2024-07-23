@@ -1,6 +1,6 @@
 Package: Bioc2024tidyWorkshop
 Title: Applying tidy principles to investigating chromatin composition and architecture
-Version: 0.8.0
+Version: 1.0.0
 Authors@R: 
     person(given = "Jacques",
            family = "Serizay",
