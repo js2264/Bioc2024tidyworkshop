@@ -91,10 +91,10 @@ Serizay<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
 <div class="section level2">
 <h2 id="manipulating-genomic-ranges-data">Manipulating genomic ranges data<a class="anchor" aria-label="anchor" href="#manipulating-genomic-ranges-data"></a>
 </h2>
-<p><em>Recommended time: 10 min</em></p>
 <div class="section level3">
 <h3 id="importing-granges-from-files">Importing <code>GRanges</code> from files<a class="anchor" aria-label="anchor" href="#importing-granges-from-files"></a>
 </h3>
+<p><em>Recommended time: 10 min</em></p>
 <p>The <code><a href="https://rdrr.io/pkg/BiocIO/man/IO.html" class="external-link">BiocIO::import()</a></code> generic function lets one import
 <code>bed</code> files (or alike) into <code>GRanges</code> object in
 R.</p>
@@ -244,6 +244,7 @@ evaluation</a>.</p>
 <div class="section level3">
 <h3 id="manipulating-granges-with-tidy-verbs">Manipulating <code>GRanges</code> with tidy verbs<a class="anchor" aria-label="anchor" href="#manipulating-granges-with-tidy-verbs"></a>
 </h3>
+<p><em>Recommended time: 10 min</em></p>
 <p>With <code>plyranges</code>, <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1597-8/tables/1" class="external-link">a
 number of tidy operations</a> are readily available, e.g.:</p>
 <ul>
@@ -327,6 +328,7 @@ by <code>plyranges</code>:</p>
 <span><span class="co">#&gt;   [814]      XVI 933150-933249      *</span></span>
 <span><span class="co">#&gt;   -------</span></span>
 <span><span class="co">#&gt;   seqinfo: 16 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<hr>
 </div>
 </div>
 <div class="section level2">
@@ -778,12 +780,12 @@ interaction frequency, or P(s).</p>
 <div class="section level3">
 <h3 id="introduction-to-tidycoverage">Introduction to <code>tidyCoverage</code><a class="anchor" aria-label="anchor" href="#introduction-to-tidycoverage"></a>
 </h3>
-<p><em>Recommended time: 10 min</em></p>
 <div class="section level4">
 <h4 id="coverageexperiment-and-aggregatedcoverage-class">
 <code>CoverageExperiment</code> and <code>AggregatedCoverage</code>
 class<a class="anchor" aria-label="anchor" href="#coverageexperiment-and-aggregatedcoverage-class"></a>
 </h4>
+<p><em>Recommended time: 5 min</em></p>
 <p>Both classes are built on top of <code>SummarizedExperiment</code>
 class of objects.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -825,6 +827,12 @@ class of objects.</p>
 <h4 id="creating-a-coverageexperiment-object-from-tracks-and-features">Creating a <code>CoverageExperiment</code> object from tracks and
 features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperiment-object-from-tracks-and-features"></a>
 </h4>
+<p><em>Recommended time: 10 min</em></p>
+<p>A <code>CoverageExperiment</code> object extracts coverage scores
+from <code>tracks</code> (typically a named <code>BigWigFileList</code>
+or a list of already imported <code>RleList</code>s), over a list of
+genomic ranges of interest (typically a named
+<code>GRangesList</code>).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rtracklayer/man/BigWigFile.html" class="external-link">BigWigFileList</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    mnase <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"MNase.bw"</span>, package <span class="op">=</span> <span class="st">"tidyCoverage"</span><span class="op">)</span>, </span>
@@ -851,12 +859,37 @@ features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperime
 <span><span class="co">#&gt; rowData names(2): features n</span></span>
 <span><span class="co">#&gt; colnames(2): mnase cohesin</span></span>
 <span><span class="co">#&gt; colData names(1): track</span></span>
-<span><span class="co">#&gt; width: 2000</span></span>
+<span><span class="co">#&gt; width: 2000</span></span></code></pre></div>
+<p>Remember, this class of object is nearly identical to a
+<code>SummarizedExperiment</code> object.</p>
+<p>The slight difference is that each cell of the <code>coverage</code>
+assay is a <code>list</code> with a single element which is an
+array.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">ce2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 2 rows and 1 column</span></span>
+<span><span class="co">#&gt;               track</span></span>
+<span><span class="co">#&gt;         &lt;character&gt;</span></span>
+<span><span class="co">#&gt; mnase         mnase</span></span>
+<span><span class="co">#&gt; cohesin     cohesin</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">ce2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 2 rows and 2 columns</span></span>
+<span><span class="co">#&gt;         features         n</span></span>
+<span><span class="co">#&gt;      &lt;character&gt; &lt;integer&gt;</span></span>
+<span><span class="co">#&gt; TSSs        TSSs       553</span></span>
+<span><span class="co">#&gt; TTSs        TTSs       537</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">ce2</span>, <span class="st">'coverage'</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      mnase           cohesin        </span></span>
 <span><span class="co">#&gt; TSSs numeric,1106000 numeric,1106000</span></span>
 <span><span class="co">#&gt; TTSs numeric,1074000 numeric,1074000</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">ce2</span>, <span class="st">'coverage'</span><span class="op">)</span><span class="op">[</span><span class="st">'TSSs'</span>, <span class="st">'mnase'</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "list"</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">ce2</span>, <span class="st">'coverage'</span><span class="op">)</span><span class="op">[[</span><span class="st">'TSSs'</span>, <span class="st">'mnase'</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "matrix" "array"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">ce2</span>, <span class="st">'coverage'</span><span class="op">)</span><span class="op">[[</span><span class="st">'TSSs'</span>, <span class="st">'mnase'</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]  553 2000</span></span></code></pre></div>
@@ -864,7 +897,11 @@ features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperime
 <div class="section level4">
 <h4 id="tidy-coverage-thats-right">Tidy coverage? That’s right!<a class="anchor" aria-label="anchor" href="#tidy-coverage-thats-right"></a>
 </h4>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p><em>Recommended time: 5 min</em></p>
+<p>Methods for <code>tidyverse</code> action verbs are available for
+<code>CoverageExperiment</code> objects, through the
+<code>tidySummarizedExperiment</code> package.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stemangiola/tidySummarizedExperiment" class="external-link">tidySummarizedExperiment</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ttservice</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -901,21 +938,26 @@ features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperime
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TTSs     mnase   <span style="color: #949494;">&lt;dbl [537 × 2,000]&gt;</span> mnase TTSs       537 <span style="color: #949494;">&lt;tibble [537 × 8]&gt;</span></span></span>
 <span></span>
-<span><span class="va">ce2</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">track</span> <span class="op">==</span> <span class="st">'mnase'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">features</span>, <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">ce2</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">features</span>, <span class="va">n</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tidySummarizedExperiment says: Key columns are missing. A data frame is returned for independent data analysis.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
 <span><span class="co">#&gt;   features     n</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TSSs       553</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TTSs       537</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TTSs       537</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> TSSs       553</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> TTSs       537</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="expand-or-aggregate">
 <code>expand()</code> or <code>aggregate()</code><a class="anchor" aria-label="anchor" href="#expand-or-aggregate"></a>
 </h4>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<p><em>Recommended time: 5 min</em></p>
+<p>The <code>expand</code> method provided in the
+<code>tidyCoverage</code> package is used to turn a
+<code>CoverageExperiment</code> object into a tidy
+<code>tibble</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand.html" class="external-link">expand</a></span><span class="op">(</span><span class="va">ce2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tib</span></span>
@@ -933,9 +975,16 @@ features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperime
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> mnase TSSs     IV    IV:302211-304210:+ +      <span style="text-decoration: underline;">302</span>218    0.936         -<span style="color: #BB0000;">993</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> mnase TSSs     IV    IV:302211-304210:+ +      <span style="text-decoration: underline;">302</span>219    0.936         -<span style="color: #BB0000;">992</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> mnase TSSs     IV    IV:302211-304210:+ +      <span style="text-decoration: underline;">302</span>220    0.936         -<span style="color: #BB0000;">991</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4,359,990 more rows</span></span></span>
-<span></span>
-<span><span class="va">ac2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">ce2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4,359,990 more rows</span></span></span></code></pre></div>
+<p>The <code>aggregate</code> method provided in the
+<code>tidyCoverage</code> package is used to turn a
+<code>CoverageExperiment</code> object into an
+<code>AggregatedCoverage</code>. This class of object stores different
+statistical measurements of the coverage over each element of the
+<code>GRangesList</code> provided in the <code>CoverageExperiment</code>
+object.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ac2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">ce2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ac2</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># An AggregatedCoverage-tibble abstraction: 8000 × 13</span></span></span>
@@ -958,26 +1007,44 @@ features<a class="anchor" aria-label="anchor" href="#creating-a-coverageexperime
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: ci_low &lt;dbl&gt;, ci_high &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="example-visualizing-aggregated-coverage">Example: visualizing aggregated coverage<a class="anchor" aria-label="anchor" href="#example-visualizing-aggregated-coverage"></a>
+<h4 id="visualizing-aggregated-coverage">Visualizing aggregated coverage<a class="anchor" aria-label="anchor" href="#visualizing-aggregated-coverage"></a>
 </h4>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ac2</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord</span>, y <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_aggrcoverage</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">track</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<p><em>Recommended time: 10 min</em></p>
+<p>The development version of <code>tidyCoverage</code> now ships two
+<code>geom_*</code> with appropriate default mapping aesthetics:</p>
+<ul>
+<li>
+<code><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_coverage()</a></code> for <code>CoverageExperiment</code>
+objects.</li>
+<li>
+<code><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_aggrcoverage()</a></code> for <code>AggregatedCoverage</code>
+objects.</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html" class="external-link">CoverageExperiment</a></span><span class="op">(</span><span class="va">tracks</span>, <span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html" class="external-link">GRanges</a></span><span class="op">(</span><span class="st">"II:1-100000"</span><span class="op">)</span>, window <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand.html" class="external-link">expand</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_coverage</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">track</span> <span class="op">~</span> <span class="va">features</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'chrV'</span>, y <span class="op">=</span> <span class="st">'Signal coverage'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="workshop_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ac2</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_aggrcoverage</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">track</span> <span class="op">~</span> <span class="va">features</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Distance from genomic features'</span>, y <span class="op">=</span> <span class="st">'Signal coverage'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="workshop_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="workshop_files/figure-html/unnamed-chunk-23-2.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="real-world-use-case-studying-epigenomic-landscape-of-reulatory-elements">Real-world use case: studying epigenomic landscape of reulatory
 elements<a class="anchor" aria-label="anchor" href="#real-world-use-case-studying-epigenomic-landscape-of-reulatory-elements"></a>
 </h3>
-<p><em>Recommended time: 20 min</em></p>
 <div class="section level4">
 <h4 id="fetch-coverage-data-from-encode">Fetch coverage data from ENCODE<a class="anchor" aria-label="anchor" href="#fetch-coverage-data-from-encode"></a>
 </h4>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">AnnotationHub</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: BiocFileCache</span></span>
 <span><span class="co">#&gt; Loading required package: dbplyr</span></span>
@@ -1005,7 +1072,7 @@ elements<a class="anchor" aria-label="anchor" href="#real-world-use-case-studyin
 <div class="section level4">
 <h4 id="plotting-coverage-data-over-several-loci">Plotting coverage data over several loci<a class="anchor" aria-label="anchor" href="#plotting-coverage-data-over-several-loci"></a>
 </h4>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ce3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html" class="external-link">CoverageExperiment</a></span><span class="op">(</span></span>
 <span>    <span class="va">bws</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1019,27 +1086,27 @@ elements<a class="anchor" aria-label="anchor" href="#real-world-use-case-studyin
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_coverage</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">track</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">'Mb'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">track</span><span class="op">~</span><span class="va">features</span>, scales <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="workshop_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<p><img src="workshop_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="import-dnase-peaks-from-encode">Import DNase peaks from ENCODE<a class="anchor" aria-label="anchor" href="#import-dnase-peaks-from-encode"></a>
 </h4>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>DNase <span class="op">=</span> <span class="va">ah</span><span class="op">[[</span><span class="st">'AH30077'</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">zScore</span> <span class="op">&gt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; loading from cache</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="generating-coverage-aggregates-over-dnase-peak">Generating coverage aggregates over DNAse peak<a class="anchor" aria-label="anchor" href="#generating-coverage-aggregates-over-dnase-peak"></a>
+<h4 id="generating-coverage-aggregates-and-heatmaps-over-dnase-peak">Generating coverage aggregates and heatmaps over DNAse peak<a class="anchor" aria-label="anchor" href="#generating-coverage-aggregates-and-heatmaps-over-dnase-peak"></a>
 </h4>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ce4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html" class="external-link">CoverageExperiment</a></span><span class="op">(</span><span class="va">bws</span>, <span class="va">features</span>, width <span class="op">=</span> <span class="fl">2000</span>, window <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">ce4</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord</span>, y <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html" class="external-link">geom_aggrcoverage</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">track</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">track</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Distance from DNAse peak'</span>, y <span class="op">=</span> <span class="st">'Signal'</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="workshop_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="workshop_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
 </div>
 </div>
 </div>
